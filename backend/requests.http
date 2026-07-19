@@ -1,0 +1,14 @@
+### Create a transaction
+POST http://127.0.0.1:8000/transactions
+Content-Type: application/json
+
+{
+  "icon": "card",
+  "merchant": "Cloud Storage",
+  "meta": "Subscriptions • Credit",
+  "amount": "- $9.99",
+  "kind": "Expense"
+}
+
+### List transactions
+GET http://127.0.0.1:8000/transactions

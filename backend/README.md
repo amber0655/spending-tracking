@@ -1,0 +1,50 @@
+# Spending Tracker API
+
+Install dependencies and start the development server:
+
+```bash
+uv sync
+uv run uvicorn app.main:app --reload
+```
+
+The API runs at `http://127.0.0.1:8000`. Interactive documentation is available
+at `http://127.0.0.1:8000/docs`.
+
+Firebase Admin is initialized when the API starts. By default it uses the local
+service-account file in the `backend` directory. For other environments, set:
+
+```bash
+export FIREBASE_SERVICE_ACCOUNT=/absolute/path/to/serviceAccountKey.json
+```
+
+The initialized Firebase app and Firestore client are available as
+`app.firebase.firebase_app` and `app.firebase.firebase_db`. Transactions are
+stored in the `transactions` Firestore collection.
+
+Create a transaction:
+
+```bash
+curl -X POST http://127.0.0.1:8000/transactions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "icon": "card",
+    "merchant": "Cloud Storage",
+    "meta": "Subscriptions • Credit",
+    "amount": "- $9.99",
+    "kind": "Expense"
+  }'
+```
+
+List transactions:
+
+```bash
+curl http://127.0.0.1:8000/transactions
+```
+
+Filter by period with `this_week`, `this_month`, or `last_3_months`:
+
+```bash
+curl "http://127.0.0.1:8000/transactions?period=this_week"
+```
+
+Transactions persist in Cloud Firestore.

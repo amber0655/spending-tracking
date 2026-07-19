@@ -1,0 +1,109 @@
+[
+  {
+    "icon": "coffee",
+    "merchant": "dinner",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $111.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $23.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "11",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Dining expense",
+    "meta": "Dining • 2026-07-18",
+    "amount": "- $123.00",
+    "kind": "Expense",
+    "income": false
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Sweetgreen",
+    "meta": "Food & Dining • Credit",
+    "amount": "- $18.45",
+    "kind": "Expense"
+  },
+  {
+    "icon": "coffee",
+    "merchant": "Blue Bottle Coffee",
+    "meta": "Food & Dining • Debit",
+    "amount": "- $6.50",
+    "kind": "Expense"
+  },
+  {
+    "icon": "cash",
+    "merchant": "Acme Corp Payroll",
+    "meta": "Income • Direct Deposit",
+    "amount": "+ $3,250.00",
+    "kind": "Income",
+    "income": true
+  },
+  {
+    "icon": "bag",
+    "merchant": "Everlane",
+    "meta": "Shopping • Credit",
+    "amount": "- $145.00",
+    "kind": "Expense"
+  },
+  {
+    "icon": "car",
+    "merchant": "Uber",
+    "meta": "Transport • Debit",
+    "amount": "- $24.80",
+    "kind": "Expense"
+  },
+  {
+    "icon": "home",
+    "merchant": "PG&E Energy",
+    "meta": "Housing & Utilities • Auto-pay",
+    "amount": "- $89.20",
+    "kind": "Expense"
+  }
+]
