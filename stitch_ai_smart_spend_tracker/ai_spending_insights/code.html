@@ -1,0 +1,240 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e0e3e5",
+                      "tertiary-container": "#0b1c30",
+                      "on-primary-fixed": "#131b2e",
+                      "surface-variant": "#e0e3e5",
+                      "surface-bright": "#f7f9fb",
+                      "background": "#f7f9fb",
+                      "primary-container": "#131b2e",
+                      "on-background": "#191c1e",
+                      "surface-container-high": "#e6e8ea",
+                      "on-tertiary-container": "#75859d",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eceef0",
+                      "tertiary-fixed": "#d3e4fe",
+                      "outline-variant": "#c6c6cd",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#b7c8e1",
+                      "inverse-surface": "#2d3133",
+                      "surface-dim": "#d8dadc",
+                      "surface-container-low": "#f2f4f6",
+                      "on-tertiary-fixed-variant": "#38485d",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#000000",
+                      "on-surface-variant": "#45464d",
+                      "on-secondary-container": "#00714d",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed": "#6ffbbe",
+                      "secondary-fixed-dim": "#4edea3",
+                      "surface-tint": "#565e74",
+                      "secondary-container": "#6cf8bb",
+                      "on-surface": "#191c1e",
+                      "on-error-container": "#93000a",
+                      "secondary": "#006c49",
+                      "outline": "#76777d",
+                      "error-container": "#ffdad6",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-primary-container": "#7c839b",
+                      "primary": "#000000",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#dae2fd",
+                      "inverse-primary": "#bec6e0",
+                      "on-secondary-fixed-variant": "#005236",
+                      "surface": "#f7f9fb",
+                      "on-secondary-fixed": "#002113",
+                      "on-tertiary-fixed": "#0b1c30",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "stack-sm": "4px",
+                      "container-padding-mobile": "16px",
+                      "container-padding-desktop": "32px",
+                      "base": "8px",
+                      "stack-md": "12px",
+                      "stack-lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "data-mono": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #f7f9fb; -webkit-font-smoothing: antialiased; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid #e2e8f0;
+        }
+        .chart-bar {
+            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between px-container-padding-mobile md:px-container-padding-desktop h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-base">
+
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg tracking-tight text-primary">Aura Finance</h1>
+</div>
+<div class="flex items-center gap-stack-lg">
+<nav class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1 rounded-lg font-body-lg" href="#">Home</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1 rounded-lg font-body-lg" href="#">Scan</a>
+<a class="text-primary font-bold px-3 py-1 rounded-lg font-body-lg" href="#">Insights</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-1 rounded-lg font-body-lg" href="#">Settings</a>
+</nav>
+<button class="material-symbols-outlined text-primary p-2 active:scale-95 duration-200">notifications</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-container-padding-mobile md:px-container-padding-desktop max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<span class="font-label-caps text-label-caps text-on-tertiary-container uppercase tracking-widest">Financial Overview</span>
+<h2 class="font-headline-lg text-headline-lg text-primary mt-1">Smart Insights</h2>
+</div>
+<!-- Time Range Filter -->
+<div class="flex bg-surface-container p-1 rounded-xl w-fit">
+<button class="px-4 py-1.5 rounded-lg text-body-sm font-medium transition-all hover:text-primary text-on-surface-variant">Weekly</button>
+<button class="px-4 py-1.5 rounded-lg text-body-sm font-medium transition-all bg-surface-container-lowest text-primary shadow-sm">Monthly</button>
+<button class="px-4 py-1.5 rounded-lg text-body-sm font-medium transition-all hover:text-primary text-on-surface-variant">Yearly</button>
+</div>
+</div>
+<!-- Bento Grid Insights -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
+<!-- AI Observation Card 1 -->
+<div class="md:col-span-4 glass-card p-stack-lg rounded-xl flex flex-col justify-between group hover:shadow-lg transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container text-on-secondary-container rounded-xl">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<span class="font-label-caps text-[10px] px-2 py-0.5 bg-error-container text-on-error-container rounded-full">+15.4%</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md mb-2">Dining Behavior</h3>
+<p class="text-on-surface-variant text-body-lg leading-relaxed">You spent <span class="text-primary font-semibold">15% more</span> on dining than last month. Consider moving three meals to home cooking to save $140 next month.</p>
+</div>
+</div>
+<!-- Spending Distribution Chart (Large) -->
+
+<!-- AI Observation Card 2 -->
+
+<!-- Mini Metrics Column -->
+<div class="md:col-span-3 flex flex-col gap-stack-lg">
+
+
+
+</div>
+<!-- Visual Breakout Section -->
+<div class="md:col-span-4 rounded-xl overflow-hidden relative min-h-[240px] shadow-sm">
+
+
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface border-t border-outline-variant z-50 rounded-t-xl shadow-[0px_-4px_12px_rgba(0,0,0,0.05)]"><a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-150" href="#">
+  <span class="material-symbols-outlined">dashboard</span>
+  <span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-150" href="#">
+  <span class="material-symbols-outlined">receipt_long</span>
+  <span class="font-label-caps text-label-caps mt-1">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-1 active:scale-90 transition-transform duration-150" href="#">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+  <span class="font-label-caps text-label-caps mt-0.5">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-150" href="#">
+  <span class="material-symbols-outlined">settings</span>
+  <span class="font-label-caps text-label-caps mt-1">Settings</span>
+</a></nav>
+<!-- Floating Action Button for AI Ask (Contextual) -->
+<button class="fixed bottom-24 right-6 md:bottom-12 md:right-12 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40 group overflow-hidden">
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-3xl">auto_awesome</span>
+</button>
+<script>
+        // Micro-interaction: Bar chart animation on load
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach((bar, index) => {
+                const targetHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = targetHeight;
+                }, 200 + (index * 100));
+            });
+        });
+
+        // Hover animation for cards
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+</body></html>

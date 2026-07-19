@@ -1,0 +1,298 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Aura Finance | Smart Scan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-container": "#0b1c30",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-variant": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "background": "#f7f9fb",
+                        "primary-container": "#131b2e",
+                        "on-background": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-container": "#75859d",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#d3e4fe",
+                        "outline-variant": "#c6c6cd",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "inverse-surface": "#2d3133",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#45464d",
+                        "on-secondary-container": "#00714d",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-tint": "#565e74",
+                        "secondary-container": "#6cf8bb",
+                        "on-surface": "#191c1e",
+                        "on-error-container": "#93000a",
+                        "secondary": "#006c49",
+                        "outline": "#76777d",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-primary-container": "#7c839b",
+                        "primary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface": "#f7f9fb",
+                        "on-secondary-fixed": "#002113",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-sm": "4px",
+                        "container-padding-mobile": "16px",
+                        "container-padding-desktop": "32px",
+                        "base": "8px",
+                        "stack-md": "12px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scanner-line {
+            animation: scan 3s ease-in-out infinite;
+        }
+        @keyframes scan {
+            0%, 100% { transform: translateY(0); opacity: 0.2; }
+            50% { transform: translateY(100%); opacity: 0.8; }
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .mask-overlay {
+            clip-path: polygon(0% 0%, 0% 100%, 10% 100%, 10% 15%, 90% 15%, 90% 85%, 10% 85%, 10% 100%, 100% 100%, 100% 0%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-lg overflow-hidden">
+<!-- Top App Bar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between px-container-padding-mobile md:px-container-padding-desktop h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg tracking-tight text-primary">Aura Finance</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative h-screen w-full bg-black pt-16 pb-20">
+<!-- Viewfinder Wrapper -->
+<div class="relative w-full h-full overflow-hidden transition-opacity duration-500" id="viewfinder">
+<!-- Camera Feed Placeholder -->
+<div class="absolute inset-0 bg-neutral-900">
+<img alt="Receipt under camera" class="w-full h-full object-cover opacity-60" data-alt="A sharp, top-down view of a printed business receipt lying on a dark slate table. The receipt is crisp with clear black text and some faint blue logos. The lighting is focused and cinematic, coming from a side angle to create slight texture. The composition is clean and minimalist, reflecting a modern fintech scanning environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCgmQOgCzrRWDgGrnB3zkFYGPghKke_SfIVT3DqV7IOPojFxHm6s_jakd4uduB9HcLAZi50iE3kLg40zGdLKwKpeZlYiw6puE9z0IfWthJn1gOMkthwlS25RA6mPd2Q4DSf3KpLkbDUJ4mK62SRbD7C9tf3IwYImrga57Q1Ag_b0UKp5KmJmYDfUuL0RJ0Qx6eAqRudNCDscrlHrKyx7BvvrTdC6rkzwPcBc_9qqAg9OsYZgg94T0OuVwwQUT0a3gdWX3mibvIf1m2">
+</div>
+<!-- Dark Overlay Mask -->
+<div class="absolute inset-0 bg-black/40 mask-overlay"></div>
+<!-- Scanning Guides -->
+<div class="absolute inset-[15%] pointer-events-none">
+<!-- Corners -->
+<div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-secondary-fixed"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-secondary-fixed"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-secondary-fixed"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-secondary-fixed"></div>
+<!-- Animated Scanner Line -->
+<div class="scanner-line absolute top-0 left-0 w-full h-0.5 bg-secondary-fixed shadow-[0_0_15px_rgba(111,251,190,0.8)]"></div>
+<!-- Helper Text -->
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-white font-label-caps text-label-caps uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">
+                    Align Receipt Within Frame
+                </div>
+</div>
+<!-- Camera Controls -->
+<div class="absolute bottom-8 left-0 w-full px-8 flex items-center justify-between z-10">
+<button class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center border border-white/20 active:scale-90 transition-transform" id="flash-toggle">
+<span class="material-symbols-outlined">flash_off</span>
+</button>
+<button class="group relative w-20 h-20 rounded-full border-4 border-white flex items-center justify-center transition-all hover:scale-105 active:scale-95" id="capture-btn">
+<div class="w-16 h-16 rounded-full bg-white group-active:scale-90 transition-transform"></div>
+</button>
+<button class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center border border-white/20 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">photo_library</span>
+</button>
+</div>
+</div>
+<!-- Processing State (Hidden by default) -->
+<div class="hidden absolute inset-0 bg-surface-container-low flex flex-col items-center justify-center p-stack-lg transition-all duration-500 opacity-0 scale-95" id="processing-view">
+<div class="w-full max-w-sm bg-white rounded-xl shadow-lg overflow-hidden border border-outline-variant relative">
+<!-- Simulated Scanned Image -->
+<div class="aspect-[3/4] bg-neutral-100 overflow-hidden relative">
+<img alt="Captured Receipt" class="w-full h-full object-cover grayscale brightness-110" data-alt="A captured image of a retail receipt on a neutral background, showing a list of items and a total amount. The image has a slight blue tint from an AI overlay filter. Text is being highlighted by pulsing light boxes, suggesting active data extraction by an artificial intelligence system. Minimalist and high-tech feel." id="preview-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUrHhDyTDS421A8j60GY_JdCCw_yrINGjoGGCOrXXXYovpkoV-O4EfZqt-pnzbgMoc89yaJwflf-M7Mw4lQe0pQA0fnIj4MlpUSvndfTavqh22xyAhNxsqm2-nTz3dpWje_Or3ZFugFjwTnW_zNThWn6pgRsnYZfvweM61o9um9-zCua7LAzOLfOHYEOvPa1rOKu9d38XmPoM7-7Awi3-1YRLknbhYwpcZm_eXCAvHtOLOO1x0isjWjXbyV1zBeh-4luivwp9DpjoT">
+<!-- AI Parsing Indicator Overlay -->
+<div class="absolute inset-0 bg-primary/5 backdrop-blur-[2px] flex flex-col items-center justify-center">
+<div class="relative w-24 h-24 mb-4">
+<svg class="w-full h-full rotate-[-90deg]">
+<circle class="text-secondary-fixed/30" cx="48" cy="48" fill="transparent" r="44" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-secondary transition-all duration-1000" cx="48" cy="48" fill="transparent" r="44" stroke="currentColor" stroke-dasharray="276" stroke-dashoffset="100" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary animate-pulse">auto_awesome</span>
+</div>
+</div>
+<p class="font-title-md text-title-md text-primary">AI Parsing...</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Extracting line items &amp; taxes</p>
+</div>
+</div>
+<!-- Recognition Stream -->
+<div class="p-stack-md space-y-3 bg-white">
+<div class="h-4 w-3/4 rounded shimmer bg-slate-100"></div>
+<div class="h-4 w-1/2 rounded shimmer bg-slate-100"></div>
+<div class="flex justify-between items-center pt-2">
+<div class="h-6 w-1/4 rounded shimmer bg-slate-100"></div>
+<div class="h-6 w-1/3 rounded shimmer bg-slate-100"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex gap-4 w-full max-w-sm">
+<button class="flex-1 px-6 py-3 rounded-xl border border-outline font-title-md text-primary hover:bg-surface-container transition-colors active:scale-95" onclick="resetCamera()">Retake</button>
+<button class="flex-1 px-6 py-3 rounded-xl bg-primary text-on-primary font-title-md shadow-sm hover:opacity-90 transition-all active:scale-95">Confirm</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-surface-container-highest border-t border-outline-variant dark:border-none shadow-[0px_-4px_12px_rgba(0,0,0,0.05)] z-50 rounded-t-xl"><a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-1 transition-transform duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-caps text-label-caps">Add Expense</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-caps text-label-caps">Transactions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps">Insights</span>
+</a></nav>
+<script>
+        const captureBtn = document.getElementById('capture-btn');
+        const flashToggle = document.getElementById('flash-toggle');
+        const viewfinder = document.getElementById('viewfinder');
+        const processingView = document.getElementById('processing-view');
+
+        // Capture Interaction
+        captureBtn.addEventListener('click', () => {
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.className = 'fixed inset-0 bg-white z-[60] opacity-0 transition-opacity pointer-events-none';
+            document.body.appendChild(flash);
+            
+            setTimeout(() => flash.style.opacity = '1', 10);
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                viewfinder.classList.add('opacity-0', 'scale-105');
+                
+                setTimeout(() => {
+                    viewfinder.classList.add('hidden');
+                    processingView.classList.remove('hidden');
+                    setTimeout(() => {
+                        processingView.classList.remove('opacity-0', 'scale-95');
+                        processingView.classList.add('opacity-100', 'scale-100');
+                        flash.remove();
+                    }, 50);
+                }, 400);
+            }, 100);
+        });
+
+        // Flash Toggle Logic
+        let isFlashOn = false;
+        flashToggle.addEventListener('click', () => {
+            isFlashOn = !isFlashOn;
+            const icon = flashToggle.querySelector('span');
+            icon.textContent = isFlashOn ? 'flash_on' : 'flash_off';
+            flashToggle.classList.toggle('bg-white/30', isFlashOn);
+            flashToggle.classList.toggle('text-secondary-fixed', isFlashOn);
+        });
+
+        // Reset Camera Logic
+        function resetCamera() {
+            processingView.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                processingView.classList.add('hidden');
+                viewfinder.classList.remove('hidden');
+                setTimeout(() => {
+                    viewfinder.classList.remove('opacity-0', 'scale-105');
+                    viewfinder.classList.add('opacity-100', 'scale-100');
+                }, 50);
+            }, 400);
+        }
+
+        // Add haptic-like feel to buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+            });
+        });
+    </script>
+
+
+</body></html>
