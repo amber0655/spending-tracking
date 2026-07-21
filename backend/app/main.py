@@ -1,11 +1,11 @@
 from datetime import date as Date
 from datetime import datetime as DateTime
 from datetime import timedelta
-from typing import Literal
+from typing import Annotated, Literal
 
-from fastapi import FastAPI, status
+from fastapi import Depends, FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from firebase_admin import firestore
+from firebase_admin import auth, firestore
 from pydantic import BaseModel, Field
 
 from app.firebase import firebase_app, firebase_db
@@ -84,6 +84,40 @@ TRANSACTIONS_COLLECTION = "transactions"
 Period = Literal["this_week", "this_month", "last_3_months"]
 
 
+def get_current_user_id(
+    authorization: Annotated[str | None, Header()] = None,
+) -> str:
+    if not authorization:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authorization token",
+        )
+
+    scheme, separator, token = authorization.partition(" ")
+    if not separator or scheme.lower() != "bearer" or not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authorization header",
+        )
+
+    try:
+        decoded_token = auth.verify_id_token(token)
+    except Exception as error:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired authorization token",
+        ) from error
+
+    user_id = decoded_token.get("uid")
+    if not isinstance(user_id, str) or not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization token has no user ID",
+        )
+
+    return user_id
+
+
 def period_start(period: Period, today: Date | None = None) -> Date:
     current_date = today or Date.today()
     if period == "this_week":
@@ -106,26 +140,28 @@ def document_date(data: dict) -> Date | None:
     return created_at.date() if isinstance(created_at, DateTime) else None
 
 
-def list_transactions(period: Period = "this_month") -> list[Transaction]:
+def list_transactions(user_id: str, period: Period = "this_month") -> list[Transaction]:
     start_date = period_start(period)
     documents = (
         firebase_db.collection(TRANSACTIONS_COLLECTION)
-        .order_by("created_at", direction=firestore.Query.DESCENDING)
+        .where("user_id", "==", user_id)
         .stream()
     )
-    results = []
+    results: list[tuple[str, Transaction]] = []
     for document in documents:
         data = document.to_dict()
         transaction_date = document_date(data)
         if transaction_date is not None and transaction_date >= start_date:
-            results.append(Transaction.model_validate(data))
-    return results
+            results.append((str(data.get("created_at", "")), Transaction.model_validate(data)))
+    results.sort(key=lambda item: item[0], reverse=True)
+    return [transaction for _, transaction in results]
 
 
-def save_transaction(transaction: Transaction) -> None:
+def save_transaction(user_id: str, transaction: Transaction) -> None:
     firebase_db.collection(TRANSACTIONS_COLLECTION).add(
         {
             **transaction.model_dump(mode="json", exclude_none=True),
+            "user_id": user_id,
             "created_at": firestore.SERVER_TIMESTAMP,
         }
     )
@@ -136,8 +172,11 @@ def save_transaction(transaction: Transaction) -> None:
     response_model=list[Transaction],
     response_model_exclude_none=True,
 )
-def get_transactions(period: Period = "this_month") -> list[Transaction]:
-    return list_transactions(period)
+def get_transactions(
+    period: Period = "this_month",
+    user_id: str = Depends(get_current_user_id),
+) -> list[Transaction]:
+    return list_transactions(user_id, period)
 
 
 @app.post(
@@ -146,8 +185,11 @@ def get_transactions(period: Period = "this_month") -> list[Transaction]:
     response_model_exclude_none=True,
     status_code=status.HTTP_201_CREATED,
 )
-def create_transaction(payload: Transaction) -> Transaction:
-    save_transaction(payload)
+def create_transaction(
+    payload: Transaction,
+    user_id: str = Depends(get_current_user_id),
+) -> Transaction:
+    save_transaction(user_id, payload)
     return payload
 
 
@@ -157,6 +199,9 @@ def create_transaction(payload: Transaction) -> Transaction:
     response_model_exclude_none=True,
     status_code=status.HTTP_201_CREATED,
 )
-def put_transaction(payload: Transaction) -> Transaction:
-    save_transaction(payload)
+def put_transaction(
+    payload: Transaction,
+    user_id: str = Depends(get_current_user_id),
+) -> Transaction:
+    save_transaction(user_id, payload)
     return payload

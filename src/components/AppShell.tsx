@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Icon, type IconName } from './Icon'
 
-export type NavKey = 'home' | 'expense' | 'transactions' | 'insights'
+export type NavKey = 'home' | 'expense' | 'transactions' | 'insights' | 'account'
 
 export function AppHeader() {
   return (
@@ -24,6 +24,7 @@ export function BottomNav({ active }: { active: NavKey }) {
     { icon: 'plus', label: 'Add Expense', key: 'expense', path: '/expenses/new' },
     { icon: 'receipt', label: 'Transactions', key: 'transactions', path: '/transactions' },
     { icon: 'chart', label: 'Insights', key: 'insights', path: '/insights' },
+    { icon: 'user', label: 'My Account', key: 'account', path: '/account' },
   ]
 
   return (

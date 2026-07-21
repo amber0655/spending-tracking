@@ -7,14 +7,25 @@ from app.main import INITIAL_TRANSACTIONS, Transaction, app, period_start
 
 
 client = TestClient(app)
+TEST_USER_ID = "test-user-123"
 
 
 @pytest.fixture(autouse=True)
-def fake_firestore(monkeypatch) -> list[Transaction]:
-    records = [item.model_copy() for item in INITIAL_TRANSACTIONS]
-    monkeypatch.setattr(main, "list_transactions", lambda period="this_month": records)
-    monkeypatch.setattr(main, "save_transaction", lambda item: records.insert(0, item))
-    return records
+def fake_firestore(monkeypatch) -> dict[str, list[Transaction]]:
+    records = {TEST_USER_ID: [item.model_copy() for item in INITIAL_TRANSACTIONS]}
+    app.dependency_overrides[main.get_current_user_id] = lambda: TEST_USER_ID
+    monkeypatch.setattr(
+        main,
+        "list_transactions",
+        lambda user_id, period="this_month": records.get(user_id, []),
+    )
+    monkeypatch.setattr(
+        main,
+        "save_transaction",
+        lambda user_id, item: records.setdefault(user_id, []).insert(0, item),
+    )
+    yield records
+    app.dependency_overrides.clear()
 
 
 def test_get_transactions_returns_page_data() -> None:
@@ -69,3 +80,28 @@ def test_put_transaction() -> None:
     assert response.status_code == 201
     assert response.json() == payload
     assert client.get("/transactions").json()[0] == payload
+
+
+def test_transactions_require_authentication() -> None:
+    app.dependency_overrides.pop(main.get_current_user_id)
+
+    response = client.get("/transactions")
+
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Missing authorization token"}
+
+
+def test_transactions_are_isolated_by_user(fake_firestore) -> None:
+    second_user_id = "second-user-456"
+    app.dependency_overrides[main.get_current_user_id] = lambda: second_user_id
+    payload = {
+        "icon": "card",
+        "merchant": "Private purchase",
+        "meta": "Subscriptions • Credit",
+        "amount": "- $4.99",
+        "kind": "Expense",
+    }
+
+    assert client.put("/transactions", json=payload).status_code == 201
+    assert client.get("/transactions").json() == [payload]
+    assert len(fake_firestore[TEST_USER_ID]) == len(INITIAL_TRANSACTIONS)

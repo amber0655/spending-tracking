@@ -26,6 +26,7 @@ Create a transaction:
 ```bash
 curl -X POST http://127.0.0.1:8000/transactions \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $FIREBASE_ID_TOKEN" \
   -d '{
     "icon": "card",
     "merchant": "Cloud Storage",
@@ -38,13 +39,16 @@ curl -X POST http://127.0.0.1:8000/transactions \
 List transactions:
 
 ```bash
-curl http://127.0.0.1:8000/transactions
+curl http://127.0.0.1:8000/transactions \
+  -H "Authorization: Bearer $FIREBASE_ID_TOKEN"
 ```
 
 Filter by period with `this_week`, `this_month`, or `last_3_months`:
 
 ```bash
-curl "http://127.0.0.1:8000/transactions?period=this_week"
+curl "http://127.0.0.1:8000/transactions?period=this_week" \
+  -H "Authorization: Bearer $FIREBASE_ID_TOKEN"
 ```
 
-Transactions persist in Cloud Firestore.
+Every endpoint verifies the Firebase ID token. Transactions persist in Cloud
+Firestore with the verified Firebase `uid` and are only returned to that user.

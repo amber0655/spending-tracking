@@ -1,6 +1,7 @@
 ### Create a transaction
 POST http://127.0.0.1:8000/transactions
 Content-Type: application/json
+Authorization: Bearer {{firebaseIdToken}}
 
 {
   "icon": "card",
@@ -12,3 +13,4 @@ Content-Type: application/json
 
 ### List transactions
 GET http://127.0.0.1:8000/transactions
+Authorization: Bearer {{firebaseIdToken}}

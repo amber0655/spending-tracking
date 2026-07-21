@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type IconName = 'sparkles' | 'mail' | 'lock' | 'eye' | 'eyeOff' | 'bell' | 'trendDown' | 'coffee' | 'home' | 'card' | 'bag' | 'scan' | 'plus' | 'receipt' | 'chart' | 'car' | 'dots' | 'bulb' | 'check' | 'search' | 'cash' | 'flash' | 'gallery' | 'arrowUp' | 'calendar'
+export type IconName = 'sparkles' | 'mail' | 'lock' | 'eye' | 'eyeOff' | 'bell' | 'trendDown' | 'coffee' | 'home' | 'card' | 'bag' | 'scan' | 'plus' | 'receipt' | 'chart' | 'car' | 'dots' | 'bulb' | 'check' | 'search' | 'cash' | 'flash' | 'gallery' | 'arrowUp' | 'calendar' | 'user' | 'logout'
 
 const paths: Record<IconName, ReactNode> = {
   sparkles: <path d="m12 3 1.3 4.2a5.2 5.2 0 0 0 3.5 3.5L21 12l-4.2 1.3a5.2 5.2 0 0 0-3.5 3.5L12 21l-1.3-4.2a5.2 5.2 0 0 0-3.5-3.5L3 12l4.2-1.3a5.2 5.2 0 0 0 3.5-3.5L12 3Z" />,
@@ -16,6 +16,8 @@ const paths: Record<IconName, ReactNode> = {
   search: <><circle cx="11" cy="11" r="7" /><path d="m16 16 5 5" /></>, cash: <><rect x="3" y="6" width="18" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /></>,
   flash: <path d="m13 2-7 12h6l-1 8 7-12h-6l1-8Z" />, gallery: <><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-5-5L5 20" /></>,
   arrowUp: <><path d="m6 14 5-5 4 4 4-5M19 8h-4" /></>, calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></>,
+  user: <><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>,
+  logout: <><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10" /></>,
 }
 
 export function Icon({ name, className = '' }: { name: IconName; className?: string }) {
