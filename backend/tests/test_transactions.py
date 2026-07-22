@@ -24,6 +24,18 @@ def fake_firestore(monkeypatch) -> dict[str, list[Transaction]]:
         "save_transaction",
         lambda user_id, item: records.setdefault(user_id, []).insert(0, item),
     )
+    async def fake_receipt_parser(_image: bytes, _mime_type: str) -> Transaction:
+        return Transaction(
+            icon="bag",
+            merchant="Aura Market",
+            meta="Shopping • Receipt",
+            amount="- $34.25",
+            kind="Expense",
+            income=False,
+            date=date(2026, 7, 21),
+        )
+
+    monkeypatch.setattr(main, "parse_receipt_with_gemini", fake_receipt_parser)
     yield records
     app.dependency_overrides.clear()
 
@@ -105,3 +117,38 @@ def test_transactions_are_isolated_by_user(fake_firestore) -> None:
     assert client.put("/transactions", json=payload).status_code == 201
     assert client.get("/transactions").json() == [payload]
     assert len(fake_firestore[TEST_USER_ID]) == len(INITIAL_TRANSACTIONS)
+
+
+def test_scan_receipt_returns_mock_data() -> None:
+    response = client.post(
+        "/receipts/scan",
+        files={"file": ("receipt.jpg", b"mock image bytes", "image/jpeg")},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["merchant"] == "Aura Market"
+    assert response.json()["amount"] == "- $34.25"
+    assert response.json()["date"] == "2026-07-21"
+    assert response.json()["kind"] == "Expense"
+    assert response.json()["income"] is False
+
+
+def test_scan_receipt_rejects_non_image() -> None:
+    response = client.post(
+        "/receipts/scan",
+        files={"file": ("receipt.txt", b"not an image", "text/plain")},
+    )
+
+    assert response.status_code == 415
+    assert response.json() == {"detail": "Receipt must be an image file"}
+
+
+def test_scan_receipt_requires_authentication() -> None:
+    app.dependency_overrides.pop(main.get_current_user_id)
+
+    response = client.post(
+        "/receipts/scan",
+        files={"file": ("receipt.jpg", b"mock image bytes", "image/jpeg")},
+    )
+
+    assert response.status_code == 401

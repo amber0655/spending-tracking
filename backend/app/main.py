@@ -1,16 +1,24 @@
+import os
+import logging
 from datetime import date as Date
 from datetime import datetime as DateTime
 from datetime import timedelta
 from typing import Annotated, Literal
 
-from fastapi import Depends, FastAPI, Header, HTTPException, status
+from fastapi import Depends, FastAPI, File, Header, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from firebase_admin import auth, firestore
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
 
 from app.firebase import firebase_app, firebase_db
 
 
+load_dotenv()
+logger = logging.getLogger(__name__)
 app = FastAPI(title="Spending Tracker API")
 app.state.firebase_app = firebase_app
 app.state.firebase_db = firebase_db
@@ -25,13 +33,37 @@ IconName = Literal["coffee", "cash", "bag", "car", "home", "card", "dots"]
 
 
 class Transaction(BaseModel):
-    icon: IconName
-    merchant: str = Field(min_length=1, max_length=200)
-    meta: str = Field(min_length=1, max_length=200)
-    amount: str = Field(min_length=1, max_length=50)
-    kind: str = Field(min_length=1, max_length=50)
-    income: bool | None = None
-    date: Date | None = None
+    icon: IconName = Field(
+        description="UI icon inferred from the purchase: coffee for dining, bag for shopping, car for transport, home for housing or utilities, card for subscriptions, and dots when uncertain."
+    )
+    merchant: str = Field(
+        min_length=1,
+        max_length=200,
+        description="Merchant or store name printed on the receipt, without address or slogan.",
+    )
+    meta: str = Field(
+        min_length=1,
+        max_length=200,
+        description="Short display metadata in the format 'Category • Receipt', for example 'Dining • Receipt'.",
+    )
+    amount: str = Field(
+        min_length=1,
+        max_length=50,
+        description="Receipt grand total as a negative US-dollar display string with exactly two decimals, for example '- $18.45'.",
+    )
+    kind: str = Field(
+        min_length=1,
+        max_length=50,
+        description="Transaction type. Use 'Expense' for a purchase receipt.",
+    )
+    income: bool | None = Field(
+        default=None,
+        description="Whether this transaction is income. Use false for a purchase receipt.",
+    )
+    date: Date | None = Field(
+        default=None,
+        description="Purchase date printed on the receipt in YYYY-MM-DD form; null if it is not visible or cannot be determined.",
+    )
 
 
 INITIAL_TRANSACTIONS = [
@@ -82,6 +114,62 @@ INITIAL_TRANSACTIONS = [
 
 TRANSACTIONS_COLLECTION = "transactions"
 Period = Literal["this_week", "this_month", "last_3_months"]
+MAX_RECEIPT_BYTES = 15 * 1024 * 1024
+RECEIPT_PROMPT = """Read this receipt image and extract its purchase as one Transaction.
+Use only information visible in the image. Do not invent a merchant, total, or date.
+Choose the most suitable category icon. The grand total must include tax and tip when shown.
+Return only the structured result requested by the response schema."""
+
+
+async def parse_receipt_with_gemini(image: bytes, mime_type: str) -> Transaction:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Receipt scanning is not configured: GEMINI_API_KEY is missing",
+        )
+
+    client = genai.Client(api_key=api_key)
+    primary_model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    fallback_model = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.5-flash-lite")
+    models = list(dict.fromkeys([primary_model, fallback_model]))
+    last_error: Exception | None = None
+
+    for model in models:
+        try:
+            response = await client.aio.models.generate_content(
+                model=model,
+                contents=[
+                    RECEIPT_PROMPT,
+                    types.Part.from_bytes(data=image, mime_type=mime_type),
+                ],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=Transaction,
+                    temperature=0,
+                ),
+            )
+            if isinstance(response.parsed, Transaction):
+                return response.parsed
+            if response.text:
+                return Transaction.model_validate_json(response.text)
+            raise ValueError("Gemini returned no structured transaction")
+        except genai_errors.ServerError as error:
+            last_error = error
+            logger.warning("Gemini model %s is unavailable; trying fallback", model)
+            continue
+        except Exception as error:
+            logger.exception("Gemini receipt parsing failed with model %s", model)
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Gemini could not parse this receipt",
+            ) from error
+
+    logger.error("All Gemini receipt models were unavailable: %s", last_error)
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail="Receipt scanning is temporarily busy. Please try again.",
+    ) from last_error
 
 
 def get_current_user_id(
@@ -205,3 +293,30 @@ def put_transaction(
 ) -> Transaction:
     save_transaction(user_id, payload)
     return payload
+
+
+@app.post("/receipts/scan", response_model=Transaction, response_model_exclude_none=True)
+async def scan_receipt(
+    file: Annotated[UploadFile, File(description="Receipt image")],
+    _user_id: str = Depends(get_current_user_id),
+) -> Transaction:
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Receipt must be an image file",
+        )
+
+    image = await file.read(MAX_RECEIPT_BYTES + 1)
+    await file.close()
+    if not image:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Receipt image is empty",
+        )
+    if len(image) > MAX_RECEIPT_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail="Receipt image must be 15 MB or smaller",
+        )
+
+    return await parse_receipt_with_gemini(image, file.content_type)

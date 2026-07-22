@@ -1,10 +1,12 @@
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getRedirectResult,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
   type NextOrObserver,
   type User,
@@ -23,7 +25,17 @@ export function signUpWithEmail(email: string, password: string) {
 }
 
 export function signInWithGoogle() {
-  return signInWithPopup(auth, googleProvider)
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+  return isMobile
+    ? signInWithRedirect(auth, googleProvider)
+    : signInWithPopup(auth, googleProvider)
+}
+
+let redirectResultPromise: ReturnType<typeof getRedirectResult> | null = null
+
+export function completeGoogleRedirectSignIn() {
+  redirectResultPromise ??= getRedirectResult(auth)
+  return redirectResultPromise
 }
 
 export function signOutUser() {
