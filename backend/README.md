@@ -10,6 +10,19 @@ uv run uvicorn app.main:app --reload
 The API runs at `http://127.0.0.1:8000`. Interactive documentation is available
 at `http://127.0.0.1:8000/docs`.
 
+Copy `.env.example` to `.env` and add a Gemini API key to enable receipt scans:
+
+```bash
+cp .env.example .env
+```
+
+`POST /receipts/scan` accepts an authenticated multipart image upload in the
+`file` field. Gemini reads the image bytes and returns a structured
+`Transaction`. The default model is `gemini-2.5-flash`; override it with
+`GEMINI_MODEL` if needed.
+If the primary model is temporarily unavailable, the server retries with
+`GEMINI_FALLBACK_MODEL` (default: `gemini-3.5-flash-lite`).
+
 Firebase Admin is initialized when the API starts. By default it uses the local
 service-account file in the `backend` directory. For other environments, set:
 
@@ -52,3 +65,16 @@ curl "http://127.0.0.1:8000/transactions?period=this_week" \
 
 Every endpoint verifies the Firebase ID token. Transactions persist in Cloud
 Firestore with the verified Firebase `uid` and are only returned to that user.
+
+Generate personalized insights for the current natural week, month, or year:
+
+```bash
+curl "http://127.0.0.1:8000/insights?interval=monthly" \
+  -H "Authorization: Bearer $FIREBASE_ID_TOKEN"
+```
+
+The response is an array of structured insight cards. Results are cached in
+Firestore for 24 hours per user and interval. Creating a transaction clears
+that user's weekly, monthly, and yearly caches so the next request includes the
+new expense. Periods with fewer than two transactions return a deterministic
+“More data needed” card without calling Gemini.

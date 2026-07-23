@@ -1,8 +1,9 @@
-import { type FormEvent, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { FirebaseError } from 'firebase/app'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { useAuth } from '../auth/useAuth'
+import { completeGoogleRedirectSignIn } from '../services/auth'
 
 function GoogleMark() {
   return (
@@ -43,6 +44,13 @@ export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const destination = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/dashboard'
+
+  useEffect(() => {
+    void completeGoogleRedirectSignIn().catch((authError) => {
+      setError(authErrorMessage(authError))
+      setIsSubmitting(false)
+    })
+  }, [])
 
   if (!loading && user) return <Navigate to={destination} replace />
 

@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AppHeader, BottomNav } from '../components/AppShell'
 import { Icon, type IconName } from '../components/Icon'
 import { putTransaction } from '../lib/transactionsApi'
@@ -12,10 +13,13 @@ const categories: Array<{ label: string; icon: IconName }> = [
 ]
 
 export function ManualExpensePage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const receipt = (location.state as { receipt?: { amount?: string; merchant?: string; date?: string } } | null)?.receipt
   const [category, setCategory] = useState('Dining')
-  const [amount, setAmount] = useState('')
-  const [date, setDate] = useState('2026-07-18')
-  const [notes, setNotes] = useState('')
+  const [amount, setAmount] = useState(receipt?.amount ?? '')
+  const [date, setDate] = useState(receipt?.date || new Date().toLocaleDateString('en-CA'))
+  const [notes, setNotes] = useState(receipt?.merchant ?? '')
   const [saved, setSaved] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -54,6 +58,10 @@ export function ManualExpensePage() {
       <main className="mx-auto max-w-2xl px-5 pb-28 pt-24 sm:px-8">
         <h2 className="text-3xl font-semibold">Record Expense</h2>
         <p className="mt-2 text-sm text-[#5c5d64]">Stay mindful of your spending habits.</p>
+        <button type="button" onClick={() => navigate('/receipts/scan')} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white">
+          <Icon name="scan" className="size-5" /> Scan a receipt
+        </button>
+        {receipt && <p className="mt-3 text-sm font-medium text-[#006c49]">Receipt details added. Review them before saving.</p>}
         <form onSubmit={submit} className="mt-6">
           <section className="amount-card">
             <label className="eyebrow" htmlFor="amount">Amount</label>

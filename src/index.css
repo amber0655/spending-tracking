@@ -607,6 +607,29 @@ button { cursor: pointer; }
 .preview-secondary,.preview-primary { height: 50px; border-radius: 12px; font-weight: 600; }
 .preview-secondary { border: 1px solid rgb(255 255 255 / 45%); background: transparent; color: #fff; }
 .preview-primary { border: 0; background: #fff; color: #000; }
+.preview-primary:disabled { cursor: not-allowed; opacity: .45; }
+.scan-start { width: min(100%, 430px); border: 1px solid rgb(255 255 255 / 18%); border-radius: 24px; background: rgb(255 255 255 / 8%); padding: 32px; text-align: center; box-shadow: 0 20px 50px rgb(0 0 0 / 35%); backdrop-filter: blur(14px); }
+.scan-start-icon { display: grid; width: 72px; height: 72px; margin: 0 auto 18px; place-items: center; border-radius: 20px; background: #6cf8bb; color: #003824; }
+.scan-start h2 { margin: 0; font-size: 30px; font-weight: 650; }
+.scan-start > p { margin: 10px auto 24px; color: rgb(255 255 255 / 70%); font-size: 14px; line-height: 1.5; }
+.scan-action-primary,.scan-action-secondary { display: flex; width: 100%; height: 54px; align-items: center; justify-content: center; gap: 10px; border-radius: 13px; font-weight: 650; }
+.scan-action-primary { border: 0; background: #fff; color: #000; }
+.scan-action-secondary { margin-top: 12px; border: 1px solid rgb(255 255 255 / 45%); background: transparent; color: #fff; }
+.scan-start .scan-hint { margin-bottom: 0; font-size: 12px; }
+.scan-image-shell { position: relative; overflow: hidden; max-height: 360px; border-radius: 13px; background: #111; }
+.scan-image-shell img { display: block; width: 100%; max-height: 360px; object-fit: contain; }
+.scan-processing,.scan-result,.scan-error { margin-top: 20px; }
+.scan-processing { text-align: center; }
+.scan-processing p,.scan-error p { color: rgb(255 255 255 / 65%); font-size: 12px; }
+.scan-progress { overflow: hidden; height: 7px; margin: 16px 0 10px; border-radius: 999px; background: rgb(255 255 255 / 12%); }
+.scan-progress span { display: block; width: 42%; height: 100%; border-radius: inherit; background: #6cf8bb; animation: upload-progress 1.15s ease-in-out infinite alternate; }
+@keyframes upload-progress { from { transform: translateX(-30%); } to { transform: translateX(170%); } }
+.scan-result { display: grid; gap: 14px; }
+.scan-result label { display: grid; gap: 6px; color: rgb(255 255 255 / 72%); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.scan-result input { width: 100%; height: 46px; border: 1px solid rgb(255 255 255 / 20%); border-radius: 10px; outline: none; background: rgb(0 0 0 / 28%); padding: 0 12px; color: #fff; font-size: 14px; font-weight: 500; text-transform: none; }
+.scan-result input:focus { border-color: #6cf8bb; box-shadow: 0 0 0 3px rgb(108 248 187 / 16%); }
+.scan-warning { margin: 0; color: #ffd7d2; font-size: 12px; }
+.scan-error strong { display: block; color: #ffdad6; font-size: 18px; }
 @keyframes scan { to { top: 88%; } }
 
 @media (max-width: 640px) {
