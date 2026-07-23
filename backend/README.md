@@ -23,8 +23,13 @@ cp .env.example .env
 If the primary model is temporarily unavailable, the server retries with
 `GEMINI_FALLBACK_MODEL` (default: `gemini-3.5-flash-lite`).
 
-Firebase Admin is initialized when the API starts. By default it uses the local
-service-account file in the `backend` directory. For other environments, set:
+Firebase Admin is initialized when the API starts. On Render, copy each field
+from the service-account JSON into the corresponding `FIREBASE_*` environment
+variable shown in `.env.example`. Store `FIREBASE_PRIVATE_KEY` on one line with
+literal `\n` sequences; the backend converts them to real newlines.
+
+For local development, the service-account file remains supported as a
+fallback:
 
 ```bash
 export FIREBASE_SERVICE_ACCOUNT=/absolute/path/to/serviceAccountKey.json
