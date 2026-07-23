@@ -65,3 +65,16 @@ curl "http://127.0.0.1:8000/transactions?period=this_week" \
 
 Every endpoint verifies the Firebase ID token. Transactions persist in Cloud
 Firestore with the verified Firebase `uid` and are only returned to that user.
+
+Generate personalized insights for the current natural week, month, or year:
+
+```bash
+curl "http://127.0.0.1:8000/insights?interval=monthly" \
+  -H "Authorization: Bearer $FIREBASE_ID_TOKEN"
+```
+
+The response is an array of structured insight cards. Results are cached in
+Firestore for 24 hours per user and interval. Creating a transaction clears
+that user's weekly, monthly, and yearly caches so the next request includes the
+new expense. Periods with fewer than two transactions return a deterministic
+“More data needed” card without calling Gemini.
