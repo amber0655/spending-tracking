@@ -21,11 +21,19 @@ from app.firebase import firebase_app, firebase_db
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+default_cors_origins = ["https://spending-tracking.onrender.com"]
+configured_cors_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.environ.get("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+cors_origins = list(dict.fromkeys(default_cors_origins + configured_cors_origins))
 app = FastAPI(title="Spending Tracker API")
 app.state.firebase_app = firebase_app
 app.state.firebase_db = firebase_db
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=cors_origins,
     allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_methods=["GET", "POST", "PUT"],
     allow_headers=["*"],
