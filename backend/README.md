@@ -10,6 +10,13 @@ uv run uvicorn app.main:app --reload
 The API runs at `http://127.0.0.1:8000`. Interactive documentation is available
 at `http://127.0.0.1:8000/docs`.
 
+For production, set `CORS_ORIGINS` to the deployed frontend origin. Multiple
+origins can be separated with commas:
+
+```bash
+CORS_ORIGINS=https://spending-tracking.onrender.com
+```
+
 Copy `.env.example` to `.env` and add a Gemini API key to enable receipt scans:
 
 ```bash
