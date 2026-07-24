@@ -321,8 +321,13 @@ def get_current_user_id(
         )
 
     try:
-        decoded_token = auth.verify_id_token(token)
+        decoded_token = auth.verify_id_token(token, app=firebase_app)
     except Exception as error:
+        logger.warning(
+            "Firebase ID token verification failed: %s: %s",
+            type(error).__name__,
+            error,
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired authorization token",
